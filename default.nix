@@ -154,6 +154,7 @@ let
 
     propagatedBuildInputs = [
       twitter_common_log
+      bottle
     ];
   };
 
@@ -181,14 +182,27 @@ let
       md5 = "7de25ff7feef15beec70ef7beb9d2046";
     };
   };
+
+  bottle = buildPythonPackage rec {
+    version = "0.11.6";
+    name = "bottle-${version}";
+
+    src = pkgs.fetchurl {
+      url = "https://pypi.python.org/packages/source/b/bottle/${name}.tar.gz";
+      sha256 = "0abvivsbkjhjlbkfysfi3732sc0y1b4c6bnr6mz568bapqn80qrf";
+    };
+
+    propagatedBuildInputs = with pythonPackages; [ setuptools ];
+  };
 in
 
 stdenv.mkDerivation {
   name = "s3webfront";
   src = ./.;
   buildInputs = [ pythonPackages.wrapPython ];
-  pythonPath = with pythonPackages; [
+  pythonPath = [
     pythonPackages.boto
+    pythonPackages.cherrypy
     twitter_common_app
     twitter_common_log
     twitter_common_http
