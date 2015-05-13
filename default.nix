@@ -196,10 +196,14 @@ let
   };
 in
 
-stdenv.mkDerivation {
+buildPythonPackage {
   name = "s3webfront";
-  src = ./.;
-  buildInputs = [ pythonPackages.wrapPython ];
+  src = lib.cleanSource ./.;
+  buildInputs = [
+    pythonPackages.wrapPython
+    pythonPackages.pbr
+    pythonPackages.pip
+  ];
   pythonPath = [
     pythonPackages.boto
     pythonPackages.cherrypy
@@ -208,10 +212,5 @@ stdenv.mkDerivation {
     twitter_common_http
     twitter_common_exceptions
   ];
-
-  installPhase = ''
-    mkdir -p $out/bin
-    install -m 0755 s3webfront.py $out/bin/s3webfront
-    wrapPythonPrograms
-  '';
+  preBuild = "export PBR_VERSION=0.0";
 }
