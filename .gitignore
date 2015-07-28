@@ -9,3 +9,4 @@ AUTHORS
 /*.egg-info/*
 /*.egg/*
 /result
+/.eggs/*
